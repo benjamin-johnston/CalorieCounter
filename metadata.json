@@ -1,0 +1,7 @@
+{
+  "name": "NutriLens AI",
+  "description": "A high-performance calorie and nutrient tracker powered by Gemini AI. Scan food items or type descriptions to get instant, accurate nutritional insights and track your daily health goals.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
