@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { AnalysisResponse } from "../types";
+import { AnalysisResponse } from "../types.ts";
 
 const NUTRITION_SCHEMA = {
   type: Type.OBJECT,

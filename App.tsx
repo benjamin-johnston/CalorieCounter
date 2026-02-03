@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { analyzeFoodWithConversation } from './services/geminiService';
-import { FoodLogEntry, NutritionFacts, DailyStats, AnalysisResponse } from './types';
-import { NutritionLabel } from './components/NutritionLabel';
-import { DailySummary } from './components/DailySummary';
+import { analyzeFoodWithConversation } from './services/geminiService.ts';
+import { FoodLogEntry, NutritionFacts, DailyStats, AnalysisResponse } from './types.ts';
+import { NutritionLabel } from './components/NutritionLabel.tsx';
+import { DailySummary } from './components/DailySummary.tsx';
 import { Camera, Search, Plus, X, Trash2, History, ChevronRight, MessageCircle, Send } from 'lucide-react';
 
 interface ChatMessage {
@@ -49,13 +49,13 @@ const App: React.FC = () => {
     setIsLoading(true);
     const newHistory: ChatMessage[] = [...chatHistory, { role: 'user', text: query, image: imgBase64 }];
     setChatHistory(newHistory);
-    setSearchQuery(''); // Clear input for next step
+    setSearchQuery(''); 
 
     try {
       const geminiMessages = newHistory.map(m => ({
         role: m.role,
         parts: m.image 
-          ? [{ inlineData: { mimeType: 'image/jpeg', data: m.image } }, { text: m.text }] 
+          ? [{ inlineData: { mimeType: 'image/jpeg', data: m.image } }, { text: m.text || "Analyze this food" }] 
           : [{ text: m.text }]
       }));
 
@@ -70,7 +70,7 @@ const App: React.FC = () => {
       }
     } catch (error) {
       console.error(error);
-      alert("Analysis failed. Please try again.");
+      alert("Analysis failed. Please ensure your API key is correct.");
     } finally {
       setIsLoading(false);
     }
@@ -106,7 +106,7 @@ const App: React.FC = () => {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
       if (videoRef.current) videoRef.current.srcObject = stream;
     } catch (e) {
-      alert("Camera access denied");
+      alert("Camera access denied or not available.");
       setShowCamera(false);
     }
   };
@@ -123,7 +123,7 @@ const App: React.FC = () => {
         stream.getTracks().forEach(track => track.stop());
         setShowCamera(false);
         setIsSearching(true);
-        handleAnalysisStep("Analyze this food", base64);
+        handleAnalysisStep("", base64);
       }
     }
   };
@@ -212,7 +212,6 @@ const App: React.FC = () => {
         </section>
       </main>
 
-      {/* Search & Chat Overlay */}
       {isSearching && (
         <div className="fixed inset-0 z-[60] bg-white p-6 overflow-y-auto animate-in slide-in-from-bottom duration-300">
           <div className="max-w-xl mx-auto space-y-6 flex flex-col min-h-full pb-20">
